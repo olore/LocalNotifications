@@ -1,55 +1,113 @@
 /**
 	Phonegap LocalNotification Plugin
-	Copyright (c) Greg Allen 2011
-	Updates Drew Dahlman 2012
-	
-	MIT Licensed
 
-	Usage:
-	plugins.localNotification.add({ date: new Date(), message: 'This is a notification', badge: 1, id: 123, sound:'sub.caf',background:'app.background()',foreground:'app.running()' });
-	plugins.localNotification.cancel(123);
-	plugins.localNotification.cancelAll();
+  iOS/Android  (this file)
+    Unified by Brian Olore 2012
+	  MIT Licensed
+
+  iOS  (original)
+	  Copyright (c) Greg Allen 2011
+	  Updates Drew Dahlman 2012
+	  MIT Licensed
+
+  Android (original)
+    Created by Daniel van 't Oever 2012 MIT Licensed
 **/
-if (typeof cordova !== "undefined") {
-	var LocalNotification = function() {
-	};
 
-	LocalNotification.prototype.add = function(options) {
-        var defaults = {
-            date: false,
-            message: '',
-            hasAction: true,
-            action: 'View',
-            badge: 0,
-            id: 0,
-			sound:'',
-			background:'',
-			foreground:''
-        };
-        for (var key in defaults) {
-            if (typeof options[key] !== "undefined")
-                defaults[key] = options[key];
-        }
+var LocalNotification = (function (cordova) {
+
+  function LocalNotification() {};
+
+	LocalNotification.add = function(options) {
+/*
+FOR REFERENCE:
+    var defaults = {
+      id:           0,      //Android String ("0")
+      date:         false,  //Android defaults to new Date()
+      message:      '',     //same
+      hasAction:    true,   //iOS only
+      action:       'View', //iOS only
+      badge:        0,      //iOS only
+			sound:        '',     //iOS only
+			background:   '',     //iOS only
+			foreground:   '',     //iOS only
+      ticker:       '',     //Android only
+      repeatDaily:  false,  //Android only
+    };
+*/
+
+    var defaultsAndroid = {
+      id:           "0",        
+      date:         new Date(),
+      message:      '',
+      ticker:       '',     
+      repeatDaily:  false, 
+    };
+
+    var defaultsIOS = {
+      id:           0,
+      date:         false,
+      message:      '',
+      hasAction:    true,
+      action:       'View',
+      badge:        0,
+			sound:        '',
+			background:   '',
+			foreground:   '',
+    };
+
+    var defaults = defaultsIOS;
+    if (device.platform.toLowerCase() == 'android') {
+      defaults = defaultsAndroid;
+    }
+
+    for (var key in defaults) {
+      if (typeof options[key] !== "undefined") {
+        defaults[key] = options[key];
+      }
+    }
+
 		if (typeof defaults.date == 'object') {
 			defaults.date = Math.round(defaults.date.getTime()/1000);
 		}
-        cordova.exec(null,null,"LocalNotification","addNotification",[defaults]);
+
+    if (device.platform.toLowerCase() == 'android') {
+      defaults.date = (options.date.getMonth()) + "/" + (options.date.getDate()) + "/"
+					+ (options.date.getFullYear()) + "/" + (options.date.getHours()) + "/"
+					+ (options.date.getMinutes());
+    }
+
+    cordova.exec(null,null,"LocalNotification","addNotification",[defaults]);
 	};
 
-	LocalNotification.prototype.cancel = function(id) {
-		cordova.exec("LocalNotification.cancelNotification", id);
+	/**
+	 * Cancel an existing notification using its original ID.
+	 * 
+	 * @param id
+	 *            The ID that was used when creating the notification using the
+	 *            'add' method.
+	 */
+  //FIXME id(iOS) vs new Array({id: id})(Android)
+	LocalNotification.cancel = function(id) {
+		cordova.exec(null, null, "LocalNotification", "cancelNotification", id);
 	};
 	
-	LocalNotification.prototype.cancelAll = function(id) {
-        cordova.exec("LocalNotification.cancelAllNotifications");
-    };
+	/**
+	 * Cancel all notifications that were created by your application.
+	 */
+  //FIXME: cancelAll with empty Array(Android) vs cancelAllNotifications(iOS)
+	LocalNotification.cancelAll = function(id) {
+    cordova.exec(null, null, "LocalNotification", "cancelAllNotifications", []);
+    
+  };
 
-	cordova.addConstructor(function() 
-	{
-		if(!window.plugins)
-		{
-			window.plugins = {};
-		}
-		window.plugins.localNotification = new LocalNotification();
-	});
-}
+  cordova.addConstructor(function () {
+    if (!window.plugins) {
+      window.plugins = {};
+    }
+    window.plugins.localNotification = LocalNotification;
+  });
+
+  return LocalNotification;
+
+})(window.cordova || window.Cordova || window.PhoneGap);
