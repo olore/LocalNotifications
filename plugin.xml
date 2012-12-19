@@ -16,15 +16,16 @@
                 <intent-filter>
                 </intent-filter>
             </activity>
+            <receiver android:name="com.phonegap.plugin.localnotification.AlarmReceiver" >
+            </receiver>
+		
+            <receiver android:name="com.phonegap.plugin.localnotification.AlarmRestoreOnBoot" >
+                <intent-filter>
+                    <action android:name="android.intent.action.BOOT_COMPLETED" />
+                </intent-filter>
+            </receiver>
         </config-file>
 
-        <!-- Cordova 1.5 - 1.9 -->
-        <config-file target="res/xml/plugins.xml" parent="/plugins">
-            <plugin name="LocalNotification"
-                value="com.phonegap.plugins.localnotification.LocalNotification"/>
-        </config-file>
-
-        <!-- Cordova 2.0.0 -->
         <config-file target="res/xml/config.xml" parent="/cordova/plugins">
             <plugin name="LocalNotification"
                 value="com.phonegap.plugins.localnotification.LocalNotification"/>
@@ -40,6 +41,7 @@
                 target-dir="src/com/phonegap/plugins/localnotification" />
         <source-file src="src/android/LocalNotification.java"
                 target-dir="src/com/phonegap/plugins/localnotification" />
+
     </platform>
 
     <!-- ios -->

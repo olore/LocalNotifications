@@ -1,17 +1,11 @@
-Updated for Cordova 2.2.0
+1. Install via pluginstall
+2. Add a line to AlarmReceiver.java to import your R class (ex. import com.myapp.R;)
 
-To use this plugin, you need to perform the following steps:
 
-1. Copy the LocalNotification.js file to your 'www' folder and include it in your index.html
-2. Create a package com.phonegap.plugin.localnotification
-3. Copy the .java files into this package
-4. Add a line to AlarmReceiver.java to import your R class (ex. import com.myapp.R;)
-4. Fix the import in AlarmReceiver.java around line 73 where R.drawable.ic_launcher is referenced so it matches an icon in your project
-5. Update your res/xml/plugins.xml file with the following line:
+Nice tutorial for pluginstall : http://blog.chariotsolutions.com/2012/11/installing-phonegap-plugins-with.html
 
-        <plugin name="LocalNotification" value="com.phonegap.plugin.localnotification.LocalNotification" />
 
-6. Add the following fragment in the AndroidManifest.xml inside the &lt;application&gt; tag:
+3. Add the following fragment in the AndroidManifest.xml inside the &lt;application&gt; tag:
 
         <receiver android:name="com.phonegap.plugin.localnotification.AlarmReceiver" >
         </receiver>
@@ -47,10 +41,9 @@ To use this plugin, you need to perform the following steps:
                 	document.addEventListener("deviceready", appReady, false);
                 </script>
 		
-8. You can use the following commands:
+4. You can use the following commands:
 
 	- plugins.localNotification.add({ date: new Date(), message: 'This is an Android alarm using the statusbar', id: 123 });
 	- plugins.localNotification.cancel(123); 
 	- plugins.localNotification.cancelAll();
 		
-9. Enjoy. Daniel
