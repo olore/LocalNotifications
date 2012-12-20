@@ -15,41 +15,39 @@ The goals of this project are to unify iOS & Android implementations and support
 * Install via _pluginstall_
 * Include LocalNotification.js in index.html
 * Add the following code to AppDelegate.m
-<pre>
-    - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification 
-    {
 
-        UIApplicationState state = [application applicationState];
-        if (state == UIApplicationStateActive) {
-            // WAS RUNNING
-            NSLog(@"I was currently active");
+        - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification 
+        {
+            UIApplicationState state = [application applicationState];
+            if (state == UIApplicationStateActive) {
+                // WAS RUNNING
+                NSLog(@"I was currently active");
 
-            NSString *notCB = [notification.userInfo objectForKey:@"foreground"];
-            NSString *notID = [notification.userInfo objectForKey:@"notificationId"];
+                NSString *notCB = [notification.userInfo objectForKey:@"foreground"];
+                NSString *notID = [notification.userInfo objectForKey:@"notificationId"];
 
-            NSString * jsCallBack = [NSString 
-                                     stringWithFormat:@"%@(%@)", notCB,notID];  
+                NSString * jsCallBack = [NSString 
+                                        stringWithFormat:@"%@(%@)", notCB,notID];  
 
 
-            [self.viewController.webView  stringByEvaluatingJavaScriptFromString:jsCallBack];
+                [self.viewController.webView  stringByEvaluatingJavaScriptFromString:jsCallBack];
 
-            application.applicationIconBadgeNumber = 0;
+                application.applicationIconBadgeNumber = 0;
+            }
+            else {
+                // WAS IN BG
+                NSLog(@"I was in the background");
+
+                NSString *notCB = [notification.userInfo objectForKey:@"background"];
+                NSString *notID = [notification.userInfo objectForKey:@"notificationId"];
+
+                NSString * jsCallBack = [NSString 
+                                        stringWithFormat:@"%@(%@)", notCB,notID]; 
+                [self.viewController.webView stringByEvaluatingJavaScriptFromString:jsCallBack];         
+
+                application.applicationIconBadgeNumber = 0;
+            }                 
         }
-        else {
-            // WAS IN BG
-            NSLog(@"I was in the background");
-
-            NSString *notCB = [notification.userInfo objectForKey:@"background"];
-            NSString *notID = [notification.userInfo objectForKey:@"notificationId"];
-
-            NSString * jsCallBack = [NSString 
-                                     stringWithFormat:@"%@(%@)", notCB,notID]; 
-            [self.viewController.webView stringByEvaluatingJavaScriptFromString:jsCallBack];         
-
-            application.applicationIconBadgeNumber = 0;
-        }                 
-    }
-</pre>
 * Start using window.plugins.localnotification
 
 # Information
