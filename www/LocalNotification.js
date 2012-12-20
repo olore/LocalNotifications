@@ -87,15 +87,16 @@ FOR REFERENCE:
 	 *            The ID that was used when creating the notification using the
 	 *            'add' method.
 	 */
-  //FIXME id(iOS) vs new Array({id: id})(Android)
 	LocalNotification.cancel = function(id) {
+    if (device.platform.toLowerCase() == 'android') {
+      id = new Array({ id : id });
+    }
 		cordova.exec(null, null, "LocalNotification", "cancelNotification", id);
 	};
 	
 	/**
 	 * Cancel all notifications that were created by your application.
 	 */
-  //FIXME: cancelAll with empty Array(Android) vs cancelAllNotifications(iOS)
 	LocalNotification.cancelAll = function(id) {
     cordova.exec(null, null, "LocalNotification", "cancelAllNotifications", []);
     
