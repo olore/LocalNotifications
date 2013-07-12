@@ -49,6 +49,10 @@
         <plugins-plist key="LocalNotification"
             string="LocalNotification" />
 
+        <config-file target="config.xml" parent="plugins">
+            <plugin name="LocalNotification" value="LocalNotification" />
+        </config-file>
+
         <header-file src="src/ios/LocalNotification.h" />
         <source-file src="src/ios/LocalNotification.m" />
     </platform>
