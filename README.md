@@ -16,7 +16,7 @@ Great post explaining [how to use pluginstall](http://blog.chariotsolutions.com/
 1. Install via _pluginstall_
 2. Include LocalNotification.js in index.html
 3. Add the following code to AppDelegate.m
-```
+
         - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification 
         {
             UIApplicationState state = [application applicationState];
@@ -49,7 +49,7 @@ Great post explaining [how to use pluginstall](http://blog.chariotsolutions.com/
                 application.applicationIconBadgeNumber = 0;
             }                 
         }
-```
+
 4. Start using window.plugins.localnotification
 
 ## Information

@@ -1,17 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    id="com.phonegap.plugins.localnotification"
+    id="com.phonegap.plugin.localnotification"
     version="1.0.0">
 
     <name>Local Notification</name>
+    <description>
+        Notify a user at a pre-determined time using LocalNotifications on iOS or
+        alarms on Android.
+    </description>
+
+    <engines>
+        <!--
+            Cordova 2.8.0 is all I have tested on - it should work fine with earlier versions.
+            Please modify the below line, test, and submit a PR if it works for you.
+        -->
+        <engine name="cordova" version=">=2.8.0" />
+    </engines>
 
     <asset src="www/LocalNotification.js" target="LocalNotification.js" />
 
     <!-- android -->
     <platform name="android">
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
-            <activity android:name="com.phonegap.plugins.localnotification.LocalNotification"
+            <activity android:name="com.phonegap.plugin.localnotification.LocalNotification"
                       android:label="@string/app_name">
                 <intent-filter>
                 </intent-filter>
@@ -26,30 +38,34 @@
             </receiver>
         </config-file>
 
-        <config-file target="res/xml/config.xml" parent="/cordova/plugins">
+        <config-file target="res/xml/config.xml" parent="/*/plugins">
             <plugin name="LocalNotification"
-                value="com.phonegap.plugins.localnotification.LocalNotification"/>
+                value="com.phonegap.plugin.localnotification.LocalNotification" />
         </config-file>
 
         <source-file src="src/android/AlarmHelper.java"
-                target-dir="src/com/phonegap/plugins/localnotification" />
+            target-dir="src/com/phonegap/plugin/localnotification" />
         <source-file src="src/android/AlarmOptions.java"
-                target-dir="src/com/phonegap/plugins/localnotification" />
+            target-dir="src/com/phonegap/plugin/localnotification" />
         <source-file src="src/android/AlarmReceiver.java"
-                target-dir="src/com/phonegap/plugins/localnotification" />
+            target-dir="src/com/phonegap/plugin/localnotification" />
         <source-file src="src/android/AlarmRestoreOnBoot.java"
-                target-dir="src/com/phonegap/plugins/localnotification" />
+            target-dir="src/com/phonegap/plugin/localnotification" />
         <source-file src="src/android/LocalNotification.java"
-                target-dir="src/com/phonegap/plugins/localnotification" />
+            target-dir="src/com/phonegap/plugin/localnotification" />
 
     </platform>
 
     <!-- ios -->
     <platform name="ios">
         <plugins-plist key="LocalNotification"
-                    string="LocalNotification" />
+            string="LocalNotification" />
 
-        <header-file src="LocalNotification.h" />
-        <source-file src="LocalNotification.m" />
+        <config-file target="config.xml" parent="plugins">
+            <plugin name="LocalNotification" value="LocalNotification" />
+        </config-file>
+
+        <header-file src="src/ios/LocalNotification.h" />
+        <source-file src="src/ios/LocalNotification.m" />
     </platform>
 </plugin>
