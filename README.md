@@ -9,7 +9,11 @@ Great post explaining [how to use pluginstall](http://blog.chariotsolutions.com/
 ## Android
 1. Install via _pluginstall_
 2. Include LocalNotification.js in index.html
-3. Modify AlarmReceiver.java to import to your R class (modify the package name)
+3. Ensure R.java contains a 'drawable' 'icon', since we use it here:
+``` 
+   int icon = res.getIdentifier("icon", "drawable", context.getPackageName());
+```
+
 4. Start using window.plugins.localnotification
 
 ## iOS

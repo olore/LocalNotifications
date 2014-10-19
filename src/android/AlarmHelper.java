@@ -1,4 +1,4 @@
-package com.phonegap.plugin.localnotification;
+package com.phonegap.plugins.localnotification;
 
 import java.util.Calendar;
 import java.util.Map;

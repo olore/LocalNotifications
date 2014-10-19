@@ -5,18 +5,13 @@
 //	MIT Licensed
 
 #import <Foundation/Foundation.h>
-
-#ifdef CORDOVA_FRAMEWORK
-#import <Cordova/CDVPlugin.h>
-#else
 #import <Cordova/CDV.h>
-#endif
 
 @interface LocalNotification : CDVPlugin {
     
 }
-- (void)addNotification:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
-- (void)cancelNotification:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
-- (void)cancelAllNotifications:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
+- (void)addNotification:(CDVInvokedUrlCommand*)arguments;
+- (void)cancelNotification:(CDVInvokedUrlCommand*)arguments;
+- (void)cancelAllNotifications:(CDVInvokedUrlCommand*)arguments;
 
 @end

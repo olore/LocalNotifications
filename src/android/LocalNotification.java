@@ -1,4 +1,4 @@
-package com.phonegap.plugin.localnotification;
+package com.phonegap.plugins.localnotification;
 
 import java.util.Calendar;
 
@@ -9,8 +9,8 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.util.Log;
 
-import org.apache.cordova.api.Plugin;
-import org.apache.cordova.api.PluginResult;
+import org.apache.cordova.CallbackContext;
+import org.apache.cordova.CordovaPlugin;
 
 /**
  * This plugin utilizes the Android AlarmManager in combination with StatusBar
@@ -20,7 +20,7 @@ import org.apache.cordova.api.PluginResult;
  * 
  * @author Daniel van 't Oever
  */
-public class LocalNotification extends Plugin {
+public class LocalNotification extends CordovaPlugin {
 
     public static final String PLUGIN_NAME = "LocalNotification";
 
@@ -31,12 +31,10 @@ public class LocalNotification extends Plugin {
     private AlarmHelper alarm = null;
 
     @Override
-    public PluginResult execute(String action, JSONArray optionsArr, String callBackId) {
-	alarm = new AlarmHelper(cordova.getContext());
+    public boolean execute(String action, JSONArray optionsArr, CallbackContext callbackContext) {
+	alarm = new AlarmHelper(cordova.getActivity());
 	Log.d(PLUGIN_NAME, "Plugin execute called with action: " + action);
 	Log.d(PLUGIN_NAME, "Plugin execute called with options: " + optionsArr);
-
-	PluginResult result = null;
 
 	final AlarmOptions alarmOptions = new AlarmOptions();
 	alarmOptions.parseOptions(optionsArr);
@@ -61,7 +59,9 @@ public class LocalNotification extends Plugin {
 	    return this.cancelAllNotifications();
 	}
 
-	return result;
+	//TODO: Not sure this is right
+	callbackContext.success();
+	return true;
     }
 
     /**
@@ -79,9 +79,9 @@ public class LocalNotification extends Plugin {
      * @param cal
      *            A calendar object that represents the time at which the alarm
      *            should first be started
-     * @return A pluginresult.
+     * @return A boolean.
      */
-    public PluginResult add(boolean repeatDaily, String alarmTitle, String alarmSubTitle, String alarmTicker,
+    public boolean add(boolean repeatDaily, String alarmTitle, String alarmSubTitle, String alarmTicker,
 	    String alarmId, Calendar cal) {
 	final long triggerTime = cal.getTimeInMillis();
 	final String recurring = repeatDaily ? "daily" : "onetime";
@@ -91,9 +91,9 @@ public class LocalNotification extends Plugin {
 
 	boolean result = alarm.addAlarm(repeatDaily, alarmTitle, alarmSubTitle, alarmTicker, alarmId, cal);
 	if (result) {
-	    return new PluginResult(PluginResult.Status.OK);
+	    return true;
 	} else {
-	    return new PluginResult(PluginResult.Status.ERROR);
+	    return false;
 	}
     }
 
@@ -104,21 +104,21 @@ public class LocalNotification extends Plugin {
      *            The original ID of the notification that was used when it was
      *            registered using addNotification()
      */
-    public PluginResult cancelNotification(String notificationId) {
+    public boolean cancelNotification(String notificationId) {
 	Log.d(PLUGIN_NAME, "cancelNotification: Canceling event with id: " + notificationId);
 
 	boolean result = alarm.cancelAlarm(notificationId);
 	if (result) {
-	    return new PluginResult(PluginResult.Status.OK);
+	    return true;
 	} else {
-	    return new PluginResult(PluginResult.Status.ERROR);
+	    return false;
 	}
     }
 
     /**
      * Cancel all notifications that were created by this plugin.
      */
-    public PluginResult cancelAllNotifications() {
+    public boolean cancelAllNotifications() {
 	Log.d(PLUGIN_NAME, "cancelAllNotifications: cancelling all events for this application");
 	/*
 	 * Android can only unregister a specific alarm. There is no such thing
@@ -129,12 +129,7 @@ public class LocalNotification extends Plugin {
 
 	final SharedPreferences alarmSettings = cordova.getActivity().getSharedPreferences(PLUGIN_NAME, Context.MODE_PRIVATE);
 	final boolean result = alarm.cancelAll(alarmSettings);
-
-	if (result) {
-	    return new PluginResult(PluginResult.Status.OK);
-	} else {
-	    return new PluginResult(PluginResult.Status.ERROR);
-	}
+	return result;
     }
 
     /**
@@ -147,7 +142,7 @@ public class LocalNotification extends Plugin {
      * @param optionsArr
      *            The assumption is that parseOptions has been called already.
      * 
-     * @return true when successfull, otherwise false
+     * @return true when successful, otherwise false
      */
     private boolean persistAlarm(String alarmId, JSONArray optionsArr) {
 	final Editor alarmSettingsEditor = cordova.getActivity().getSharedPreferences(PLUGIN_NAME, Context.MODE_PRIVATE).edit();
@@ -163,7 +158,7 @@ public class LocalNotification extends Plugin {
      * @param alarmId
      *            The Id of the notification that must be removed.
      * 
-     * @return true when successfull, otherwise false
+     * @return true when successful, otherwise false
      */
     private boolean unpersistAlarm(String alarmId) {
 	final Editor alarmSettingsEditor = cordova.getActivity().getSharedPreferences(PLUGIN_NAME, Context.MODE_PRIVATE).edit();
