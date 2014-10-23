@@ -16,6 +16,10 @@
     [repeatDict setObject:[NSNumber numberWithInt:NSYearCalendarUnit] forKey:@"yearly"];
     [repeatDict setObject:[NSNumber numberWithInt:0] forKey:@""];
 
+  // ios8 Ask for permission to set a notification http://stackoverflow.com/q/24100313/1691
+  if ([UIApplication instancesRespondToSelector:@selector(registerUserNotificationSettings:)]) {
+      [[UIApplication sharedApplication] registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert|UIUserNotificationTypeSound categories:nil]];
+  }
     // notif settings
   NSMutableDictionary *options = (NSMutableDictionary*)[command.arguments objectAtIndex: 0];
   double timestamp = [[options objectForKey:@"date"] doubleValue];

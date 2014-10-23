@@ -2,5 +2,7 @@ android
 
 
 ios
+  wait for user to answer permission popup before trying to create notifications
+
   2014-10-17 16:16:04.739 Shelf Elf Reminder[6153:65224] THREAD WARNING: ['Notification'] took '11.066895' ms. Plugin should use a background thread.
 
